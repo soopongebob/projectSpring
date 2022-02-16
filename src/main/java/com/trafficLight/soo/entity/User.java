@@ -1,9 +1,6 @@
 package com.trafficLight.soo.entity;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -11,7 +8,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,7 +20,7 @@ public class User {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    private UUID uuid;
+    private String uuid;
 
     @Column(name = "user_id")
     private String userId;
@@ -33,6 +29,7 @@ public class User {
     private String password;
     private String email;
 
+    @Enumerated(EnumType.STRING)
     private Auth auth;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -44,7 +41,8 @@ public class User {
     @CreationTimestamp
     private LocalDateTime joinDate;
 
-    public User(UUID uuid, String userId, String username, String password, String email, Auth auth) {
+    @Builder
+    public User(String uuid, String userId, String username, String password, String email, Auth auth) {
         this.uuid = uuid;
         this.userId = userId;
         this.username = username;
