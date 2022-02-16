@@ -19,6 +19,8 @@ public class Post {
     @Id @GeneratedValue
     @Column(name = "post_idx")
     private Long postIdx;
+
+    @Enumerated(EnumType.STRING)
     private Categories category;    //enum [NOTICE, ETC, QNA, FAQ]
     private String subject;
     private String content;
