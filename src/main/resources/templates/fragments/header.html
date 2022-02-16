@@ -34,7 +34,7 @@
 
 
     <!-- Custom styles for this template -->
-    <link href="../headers/headers.css" rel="stylesheet">
+    <link th:href="@{/css/headers.css}" rel="stylesheet" type="text/css">
 </head>
 <body>
 
@@ -83,12 +83,13 @@
                     </form>
 
                     <div class="text-end">
-                        <button type="button" class="btn btn-outline-light me-2">Login</button>
-                        <button type="button" class="btn btn-warning">Sign-up</button>
+                        <button type="button" class="btn btn-outline-light me-2" onclick="location.href='/users/signIn'">Sign-in</button>
+                        <button type="button" class="btn btn-warning" onclick="location.href='/users/signUp'">Sign-up</button>
                     </div>
                 </div>
             </div>
         </header>
+    </header>
 </main>
 
 <!-- JavaScript Bundle with Popper -->
