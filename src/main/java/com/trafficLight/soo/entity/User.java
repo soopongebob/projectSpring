@@ -12,6 +12,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@ToString(of = {"userId, username, email, auth, joinDate"})
 public class User {
 
     @Id
