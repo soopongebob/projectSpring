@@ -16,7 +16,6 @@
             <tr>
                 <th scope="col">No.</th>
                 <th scope="col">subject</th>
-                <th scope="col">content</th>
                 <th scope="col">view_count</th>
                 <th scope="col">writer</th>
             </tr>
@@ -24,10 +23,11 @@
             <tbody>
             <tr th:each="post : ${posts}">
                 <td th:text="${post.postIdx}"></td>
-                <td th:text="${post.subject}"></td>
-                <td th:text="${post.content}"></td>
+                <a href="#">
+                    <td th:text="${post.subject}"></td>
+                </a>
                 <td th:text="${post.viewCount}"></td>
-                <td th:text="${post.userId}"></td>
+                <td th:text="${post.user.getUserId()}"></td>
                 <td>
 <!--                    <a href="#" th:href="@{/post/{id}/edit (id=${post.id})}"-->
 <!--                       class="btn btn-primary" role="button">수정</a>-->
@@ -35,7 +35,7 @@
             </tr>
             </tbody>
         </table>
-                <button class="btn btn-primary btn-rg" type="button">Example button</button>
+                <button class="btn btn-primary btn-rg" type="button" onclick="location.href='/post/write'">write</button>
     </div>
 </div>
 

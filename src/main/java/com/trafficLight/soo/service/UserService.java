@@ -142,4 +142,9 @@ public class UserService implements UserDetailsService {
         return createUser;
 
     }
+
+    public Optional<User> getUser(String userId){
+        Optional<User> user = userRepository.findByUserId(userId);
+        return user;
+    }
 }
