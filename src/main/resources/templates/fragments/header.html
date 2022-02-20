@@ -78,7 +78,6 @@
                         <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
                         <li><a href="#" class="nav-link px-2 text-white">About</a></li>
                     </ul>
-
                     <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
                         <input type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
                     </form>
@@ -87,12 +86,15 @@
                         <button type="button" class="btn btn-outline-light me-2" onclick="location.href='/users/signIn'">Sign-in</button>
                         <button type="button" class="btn btn-warning" onclick="location.href='/users/signUp'">Sign-up</button>
                     </div>
+                    <div>
+                        <h6> login : </h6><div sec:authentication="name"></div>
+<!--                        <div sec:authentication="principal.authorities">권한</div>-->
+                    </div>
                     <div class="text-end" sec:authorize="isAuthenticated()">
-                        <button type="button" class="btn btn-outline-light me-2" onclick="location.href='/users/myPage'"
-                        sec:authorize="hasRole('ROLE_USER')">
+                        <button type="button" class="btn btn-outline-light me-2" onclick="location.href='/users/myPage'">
                             myPage
                         </button>
-                        <button type="button" class="btn btn-warning" onclick="location.href='/users/logOut'">LogOut</button>
+                        <button type="button" class="btn btn-warning" onclick="location.href='/logout'">LogOut</button>
                     </div>
                 </div>
             </div>
