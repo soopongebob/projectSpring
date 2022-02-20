@@ -19,9 +19,9 @@ public class Manager {
 
     private String password;
 
-    private Auth auth;
+    private String auth;
 
-    public Manager(String managerId, String password, Auth auth) {
+    public Manager(String managerId, String password, String auth) {
         this.managerId = managerId;
         this.password = password;
         this.auth = auth;
