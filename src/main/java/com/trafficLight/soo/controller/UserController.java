@@ -1,9 +1,8 @@
 package com.trafficLight.soo.controller;
 
-import com.trafficLight.soo.entity.Auth;
-import com.trafficLight.soo.entity.User;
 import com.trafficLight.soo.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
@@ -21,6 +19,7 @@ public class UserController {
 
     private final UserService userService;
     private HttpSession httpSession;
+    private final PasswordEncoder passwordEncoder;
 
     //마이페이지
     @GetMapping("/users/myPage")
@@ -31,30 +30,37 @@ public class UserController {
     //로그인 페이지
     @GetMapping("/users/signIn")
     public String signIn(Model model){
+        System.out.println("로그인 페이지");
         model.addAttribute("signInForm", new SignInForm());
         return "users/signIn";
     }
 
     //로그인 확인
-    @PostMapping("/users/signIn")
-    public String signIn(@Valid SignInForm signInForm, BindingResult bindingResult,
-                         HttpServletRequest request){
+//    @PostMapping("/users/signIn")
+//    public String signIn(@Valid SignInForm signInForm){
+//        System.out.println("로그인 확인 페이지");
+//        //오류확인
+//        if(bindingResult.hasErrors()){
+//            System.out.println("로그인 오류1");
+//            return "users/signIn";
+//        }
+//
+//        userService.signIn(signInForm);
+//        if(userId != null) {
+//            return "index";
+//        }else{
+//            System.out.println("로그인 오류2");
+//            bindingResult.reject("loginFail", "아이디 또는 비밀번호 오류입니다.");
+//            return "users/signInFail";
+//        }
+//        return "index";
+//    }
 
-        //오류확인
-        if(bindingResult.hasErrors()){
-            return "users/signIn";
-        }
-
-        String userId = userService.checkIdAndPwd(signInForm);
-        if(userId != null){
-            httpSession = request.getSession();
-            httpSession.setAttribute("loginUser", userId);
-            return "index";
-        }else{
-            bindingResult.reject("loginFail", "아이디 또는 비밀번호 오류입니다.");
-            return "users/signInFail";
-        }
+    @GetMapping("/users/signInFail")
+    public String signInFail(){
+        return "users/signInFail";
     }
+
     //회원가입 페이지
     @GetMapping("/users/signUp")
     public String signUp(Model model) {
@@ -68,23 +74,15 @@ public class UserController {
     public String signUp(@Valid SignUpForm signUpForm, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
+            System.out.println("오류");
             return "redirect:/";
         }
-
-        String uuid = UUID.randomUUID().toString();
-        Auth auth = Auth.USER;
-        User user = User.builder()
-                .uuid(uuid)
-                .userId(signUpForm.getUserId())
-                .username(signUpForm.getUserName())
-                .password(signUpForm.getPassword())
-                .email(signUpForm.getEmail())
-                .auth(auth)
-                .build();
-
-        //return null일 경우, 가입 완료
-        String check = userService.signUp(user);
-        if(check == null){      //성공
+        System.out.println("회원가입 저장");
+        System.out.println("비밀번호 수정(encoding)");
+        signUpForm.encodePassword(passwordEncoder);
+        String check = userService.signUp(signUpForm);
+        if(check != null){      //성공
+            System.out.println("회원가입 성공");
             return "index";
         }else{
             return "users/signUpFail";
