@@ -1,5 +1,6 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head th:fragment="header">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -82,9 +83,16 @@
                         <input type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
                     </form>
 
-                    <div class="text-end">
+                    <div class="text-end" sec:authorize="isAnonymous()">
                         <button type="button" class="btn btn-outline-light me-2" onclick="location.href='/users/signIn'">Sign-in</button>
                         <button type="button" class="btn btn-warning" onclick="location.href='/users/signUp'">Sign-up</button>
+                    </div>
+                    <div class="text-end" sec:authorize="isAuthenticated()">
+                        <button type="button" class="btn btn-outline-light me-2" onclick="location.href='/users/myPage'"
+                        sec:authorize="hasRole('ROLE_USER')">
+                            myPage
+                        </button>
+                        <button type="button" class="btn btn-warning" onclick="location.href='/users/logOut'">LogOut</button>
                     </div>
                 </div>
             </div>

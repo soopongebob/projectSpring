@@ -31,16 +31,18 @@
   <body class="text-center">
 <main class="form-signin">
   <form th:action="@{/users/signIn}" method="post" th:object="${signInForm}">
-    <img class="mb-4" src="/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+<!--  <form method="post" th:object="${signInForm}">-->
+<!--      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
+      <img class="mb-4" src="/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
     <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
     <div class="form-floating">
-      <input type="text" class="form-control" th:name="userId" th:value="${signInForm.userId}" id="floatingInput" placeholder="ID">
-      <label for="floatingInput">ID</label>
+        <input type="text" class="form-control" th:name="userId" th:value="${signInForm.userId}" id="floatingInput" placeholder="ID">
+        <label for="floatingInput">ID</label>
     </div>
     <div class="form-floating">
-      <input type="password" class="form-control" th:name="password" th:value="${signInForm.password}"id="floatingPassword" placeholder="Password">
-      <label for="floatingPassword">Password</label>
+        <input type="password" class="form-control" th:name="password" th:value="${signInForm.password}" id="floatingPassword" placeholder="Password">
+        <label for="floatingPassword">Password</label>
     </div>
 
     <div class="checkbox mb-3">
