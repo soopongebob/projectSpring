@@ -24,7 +24,7 @@ public class UserController {
     //마이페이지
     @GetMapping("/users/myPage")
     public String myPage(){
-        return "myPage";
+        return "users/myPage";
     }
 
     //로그인 페이지
@@ -94,14 +94,4 @@ public class UserController {
         return "users/signUpFail";
     }
 
-    @PostMapping("/users/logout")
-    public String logout(HttpServletRequest request){
-        httpSession = request.getSession(false);
-
-        if(httpSession != null){
-            httpSession.invalidate();
-        }
-
-        return "redirect:/";
-    }
 }

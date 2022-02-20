@@ -46,9 +46,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        String password = passwordEncoder().encode("1111");
-//        auth.inMemoryAuthentication().withUser("user").password(password).roles("USER");
-//        auth.userDetailsService(userService);
         System.out.println("auth.authenticationProvider 실행");
         auth.authenticationProvider(authenticationProvider());
     }
@@ -63,13 +60,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 String username = authentication.getName();
                 String password = (String) authentication.getCredentials();
 
-                System.out.println("username = " + username);
-                System.out.println("password = " + password);
                 User user = (User) userService.loadUserByUsername(username);
 
-                System.out.println("password = " + password);
-                System.out.println("user.getPassword = " + user.getPassword());
-                System.out.println("user password encoder matches = " + passwordEncoder.matches(password, user.getPassword()));
                 if (!passwordEncoder.matches(password, user.getPassword())) {
                     System.out.println("비밀번호 오류로 토큰 생성 실패");
                     throw new BadCredentialsException("BadCredentialsException");
@@ -123,12 +115,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()       //csrf 인증 disable
             .authorizeRequests()    //요청 권한 검사 시작
                 //페이지 권한
-//                .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/**").permitAll()
-                .antMatchers("/index").permitAll()
-                .antMatchers("/users/**").permitAll()
-                .antMatchers("/").permitAll()
-            .and()
+                .antMatchers("/users/myPage").hasRole("USER")
+                .and()
                 .formLogin()                        //form login 인증
                 .usernameParameter("userId")        //아이디 파라미터명 설정
                 .passwordParameter("password")      //패스워드 파라미터명 설정
@@ -154,10 +143,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
             .and()
                 .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/users/logout"))
-                .logoutSuccessUrl("/index")
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/")
                 .invalidateHttpSession(true)        //세션 초기화
-                .deleteCookies("JSESSIONID");        //쿠키 제거
+                .deleteCookies("JSESSIONID", "remember-me");        //쿠키 제거
 //            .and()        //예외처리 핸들링
 //                .exceptionHandling().accessDeniedPage("/denied");
     }

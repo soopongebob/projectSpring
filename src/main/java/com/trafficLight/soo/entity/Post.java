@@ -1,9 +1,6 @@
 package com.trafficLight.soo.entity;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -30,7 +27,7 @@ public class Post {
     @Column(name = "view_count")
     private Long viewCount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -46,5 +43,14 @@ public class Post {
     public void setUser(User user){
         this.user = user;
         user.getPosts().add(this);
+    }
+
+    @Builder
+    public Post(String subject, String content, Long viewCount, User user, List<Comment> comments) {
+        this.subject = subject;
+        this.content = content;
+        this.viewCount = viewCount;
+        this.user = user;
+        this.comments = comments;
     }
 }
