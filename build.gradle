@@ -32,7 +32,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-devtools'
 
 	//security
-//	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	//OAuth
 //	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
 	//login user info
