@@ -51,7 +51,7 @@ public class UserService implements UserDetailsService {
     public String signUp(SignUpForm signUpForm){
 
         System.out.println("회원가입 저장" +  signUpForm.getEmail());
-        System.out.println("회원가입 저장" + signUpForm.getAuth());
+        System.out.println("회원가입 저장 권한" + signUpForm.getRole().toString());
         String uuid = UUID.randomUUID().toString();
         User saveUser = userRepository.save(
                 User.builder()
@@ -60,7 +60,7 @@ public class UserService implements UserDetailsService {
                         .username(signUpForm.getUserName())
                         .password(signUpForm.getPassword())
                         .email(signUpForm.getEmail())
-                        .auth(signUpForm.getAuth())
+                        .role(signUpForm.getRole())
                         .build());
         return saveUser.getUserId();
     }
@@ -134,7 +134,7 @@ public class UserService implements UserDetailsService {
         User createUser = User.builder()
                 .userId(user.get().getUserId())
                 .password(user.get().getPassword())
-                .auth(role.toString())
+                .role(role)
                 .build();
 
         System.out.println("객체 생성 완료 : " + createUser.getUserId());

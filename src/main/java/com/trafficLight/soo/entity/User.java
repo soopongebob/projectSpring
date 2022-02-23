@@ -32,7 +32,8 @@ public class User implements UserDetails {
     private String password;
     private String email;
 
-    private String auth;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     List<Post> posts = new ArrayList<>();
@@ -44,19 +45,19 @@ public class User implements UserDetails {
     private LocalDateTime joinDate;
 
     @Builder
-    public User(String uuid, String userId, String username, String password, String email, String auth) {
+    public User(String uuid, String userId, String username, String password, String email, Role role) {
         this.uuid = uuid;
         this.userId = userId;
         this.username = username;
         this.password = password;
         this.email = email;
-        this.auth = auth;
+        this.role = role;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> roles = new HashSet<>();
-        for (String role : auth.split(",")){
+        for (String role : role.getValue().split(",")){
             roles.add(new SimpleGrantedAuthority(role));
         }
         return roles;

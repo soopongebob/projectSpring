@@ -1,5 +1,6 @@
 package com.trafficLight.soo.controller;
 
+import com.trafficLight.soo.entity.Role;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,7 +19,7 @@ public class SignUpForm {
     private String password;
     @NotEmpty
     private String email;
-    private String auth = "ROLE_USER";
+    private Role role = Role.USER;
 
     public void encodePassword(PasswordEncoder passwordEncoder){
         this.password = passwordEncoder.encode(this.password);
