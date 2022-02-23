@@ -115,8 +115,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()       //csrf 인증 disable
             .authorizeRequests()    //요청 권한 검사 시작
                 //페이지 권한
-                .antMatchers("/**").permitAll()
                 .antMatchers("/users/myPage").hasRole("USER")
+                .antMatchers("/post/write").hasRole("USER")
+                .antMatchers("/**").permitAll()
                 .and()
                 .formLogin()                        //form login 인증
                 .usernameParameter("userId")        //아이디 파라미터명 설정
