@@ -6,9 +6,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
-
 <div class="container">
-    <form th:action="@{/post/write}" th:object="${postForm}" method="post">
+    <form th:action="@{/post/write}" th:object="${postWriteForm}" method="post">
         <div class="form-group">
             <label th:for="subject">제목</label>
             <input type="text" th:field="*{subject}" class="form-control"
