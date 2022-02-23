@@ -1,27 +1,30 @@
 package com.trafficLight.soo.service;
 
+import com.trafficLight.soo.controller.PostListForm;
 import com.trafficLight.soo.entity.Post;
 import com.trafficLight.soo.repository.PostRepository;
-import com.trafficLight.soo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
 
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
 
-    public List<Post> findAll(){
-        List<Post> postList = postRepository.findAll();
-        return postList;
+    public Page<PostListForm> findAll(Pageable pageable){
+        int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() - 1);
+        pageable = PageRequest.of(page, 5);
+        Page<PostListForm> posts = postRepository.pagination(pageable);
+        return posts;
     }
 
-    public void regist(Post post){
-
+    public void registration(Post post){
         postRepository.save(post);
     }
 }

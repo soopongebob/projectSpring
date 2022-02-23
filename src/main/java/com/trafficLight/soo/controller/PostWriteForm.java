@@ -8,7 +8,7 @@ import javax.validation.constraints.NotEmpty;
 
 @Data
 @Getter @Setter
-public class PostForm {
+public class PostWriteForm {
 
     @NotEmpty
     private String subject;
