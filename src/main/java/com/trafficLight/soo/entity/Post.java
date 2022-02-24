@@ -27,7 +27,7 @@ public class Post {
     @Column(name = "view_count")
     private Long viewCount;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -52,5 +52,10 @@ public class Post {
         this.viewCount = viewCount;
         this.user = user;
         this.comments = comments;
+    }
+
+    public void editPost(String subject, String content){
+        this.subject = subject;
+        this.content = content;
     }
 }
