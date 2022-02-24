@@ -44,4 +44,5 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         long total = results.getTotal();
         return new PageImpl(content, pageable, total);
     }
+
 }
