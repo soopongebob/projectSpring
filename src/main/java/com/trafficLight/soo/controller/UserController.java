@@ -35,27 +35,6 @@ public class UserController {
         return "users/signIn";
     }
 
-    //로그인 확인
-//    @PostMapping("/users/signIn")
-//    public String signIn(@Valid SignInForm signInForm){
-//        System.out.println("로그인 확인 페이지");
-//        //오류확인
-//        if(bindingResult.hasErrors()){
-//            System.out.println("로그인 오류1");
-//            return "users/signIn";
-//        }
-//
-//        userService.signIn(signInForm);
-//        if(userId != null) {
-//            return "index";
-//        }else{
-//            System.out.println("로그인 오류2");
-//            bindingResult.reject("loginFail", "아이디 또는 비밀번호 오류입니다.");
-//            return "users/signInFail";
-//        }
-//        return "index";
-//    }
-
     @GetMapping("/users/signInFail")
     public String signInFail(){
         return "users/signInFail";
@@ -83,7 +62,7 @@ public class UserController {
         String check = userService.signUp(signUpForm);
         if(check != null){      //성공
             System.out.println("회원가입 성공");
-            return "index";
+            return "redirect:/";
         }else{
             return "users/signUpFail";
         }
