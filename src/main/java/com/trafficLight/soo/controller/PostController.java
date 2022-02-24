@@ -9,18 +9,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
@@ -34,7 +31,7 @@ public class PostController {
     /**
      * 게시판 리스트
      * @param model
-     * @return
+     * @return "post/list"
      */
     @GetMapping("/post/list")
     public String postList(Model model,
@@ -46,17 +43,28 @@ public class PostController {
         return "post/list";
     }
 
+    /**
+     * 글쓰기
+     * @param model
+     * @return "post/write"
+     */
     @GetMapping("/post/write")
     public String postWriteForm(Model model){
         model.addAttribute("postWriteForm", new PostWriteForm());
         return "post/write";
     }
 
+    /**
+     * 글쓰기 저장
+     * @param postWriteForm
+     * @param user
+     * @return "redirect:/post/list"
+     */
     @PostMapping("/post/write")
     public String postWrite(@Valid PostWriteForm postWriteForm, @AuthenticationPrincipal User user){
         System.out.println("글 저장 -----");
+        System.out.println("user.getUserId : " + user.getUserId());
         Optional<User> writer = userService.getUser(user.getUserId());
-        System.out.println("writer : " + writer.get().getUserId());
         Post post = Post.builder()
                 .subject(postWriteForm.getSubject())
                 .content(postWriteForm.getContent())
@@ -64,13 +72,20 @@ public class PostController {
                 .user(writer.get())
                 .comments(null)
                 .build();
-        postService.registration(post);
+        postService.save(post);
 
         return "redirect:/post/list";
     }
 
+    /**
+     * 글 보기
+     * @param postIdx
+     * @param model
+     * @param user
+     * @return "post/view"
+     */
     @GetMapping("/post/view")
-    public String postView(@RequestParam("postIdx") Long postIdx, Model model){
+    public String postView(@RequestParam("postIdx") Long postIdx, Model model, @AuthenticationPrincipal User user){
         System.out.println("postIdx = " + postIdx);
 
 
@@ -85,11 +100,63 @@ public class PostController {
                 ldt,
                 getPost.getComments()
         );
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        String auth = (name.equals(getPost.getUser().getUsername())) ? "own" : "";
+
+        System.out.println("authenticationPrincipal username : " + user.getUsername());
+        String auth = (user.getUsername().equals(getPost.getUser().getUsername())) ? "own" : "";
+        System.out.println("auth = " + auth);
         model.addAttribute("auth", auth);
         model.addAttribute("post", post);
-
+        System.out.println("postIdx : " + post.getPostIdx());
         return "post/view";
+    }
+
+    /**
+     * 글 수정
+     * @param postIdx
+     * @param model
+     * @return "post/edit"
+     */
+    @GetMapping("/post/edit")
+    public String postEdit(@RequestParam("postIdx") Long postIdx, Model model){
+        System.out.println("---수정---");
+        Post post = postService.findByPostIdx(postIdx);
+        PostEditForm postEditForm = new PostEditForm(
+                post.getPostIdx(),
+                post.getSubject(),
+                post.getContent()
+        );
+        System.out.println("content : " + postEditForm.getContent());
+        System.out.println("subject : " + postEditForm.getSubject());
+        model.addAttribute("postEditForm", postEditForm);
+        return "post/edit";
+    }
+
+    /**
+     * 수정 글 저장
+     * @param postIdx
+     * @param postEditForm
+     * @return "redirect:/post/view?postIdx="+postIdx
+     */
+    @PostMapping("/post/edit")
+    public String postEdit(@RequestParam("postIdx") Long postIdx, @Valid PostEditForm postEditForm){
+        System.out.println("----------수정 저장--------");
+        System.out.println("postIdx : " + postIdx);
+        System.out.println("postEditForm : " + postEditForm.getSubject());
+        System.out.println("postEditForm : " + postEditForm.getContent());
+        Post post = postService.findByPostIdx(postIdx);
+        post.editPost(
+                postEditForm.getSubject(),
+                postEditForm.getContent()
+        );
+        postService.save(post);
+
+        return "redirect:/post/view?postIdx="+postIdx;
+    }
+
+    @GetMapping("/post/delete")
+    public String postDelete(@RequestParam("postIdx") Long postIdx){
+        System.out.println("-----삭제-----");
+        postService.delete(postIdx);
+        return "redirect:/post/list";
     }
 }

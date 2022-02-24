@@ -1,5 +1,6 @@
 package com.trafficLight.soo.service;
 
+import com.trafficLight.soo.controller.PostEditForm;
 import com.trafficLight.soo.controller.PostListForm;
 import com.trafficLight.soo.controller.PostViewForm;
 import com.trafficLight.soo.entity.Post;
@@ -27,12 +28,16 @@ public class PostService {
         return posts;
     }
 
-    public void registration(Post post){
+    public void save(Post post){
         postRepository.save(post);
     }
 
     public Post findByPostIdx(Long postIdx){
         Post post = postRepository.findByPostIdx(postIdx);
         return post;
+    }
+
+    public void delete(Long postIdx){
+        postRepository.deleteById(postIdx);
     }
 }
