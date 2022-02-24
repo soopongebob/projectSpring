@@ -2,13 +2,10 @@ package com.trafficLight.soo.controller;
 
 import com.trafficLight.soo.entity.Comment;
 import lombok.Data;
-import lombok.Getter;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-@Getter
 public class PostViewForm {
 
     private Long postIdx;

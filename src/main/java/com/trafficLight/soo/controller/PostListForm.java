@@ -2,12 +2,10 @@ package com.trafficLight.soo.controller;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
-import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Data
-@Getter
 public class PostListForm {
     private Long postIdx;
     private String subject;

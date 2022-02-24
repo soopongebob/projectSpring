@@ -1,11 +1,9 @@
 package com.trafficLight.soo.controller;
 
-import lombok.Getter;
-import lombok.Setter;
-
+import lombok.Data;
 import javax.validation.constraints.NotEmpty;
 
-@Getter @Setter
+@Data
 public class SignInForm {
 
     @NotEmpty(message = "아이디는 필수입니다.")
