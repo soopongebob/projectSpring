@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -32,8 +33,11 @@ public class PostService {
         postRepository.save(post);
     }
 
+    @Transactional
     public Post findByPostIdx(Long postIdx){
         Post post = postRepository.findByPostIdx(postIdx);
+        //조회수 update
+        post.editViewCount(post.getViewCount());
         return post;
     }
 

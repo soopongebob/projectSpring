@@ -58,4 +58,8 @@ public class Post {
         this.subject = subject;
         this.content = content;
     }
+
+    public void editViewCount(Long viewCount){
+        this.viewCount = viewCount + 1;
+    }
 }
