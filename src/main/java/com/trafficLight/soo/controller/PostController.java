@@ -103,8 +103,11 @@ public class PostController {
                 getPost.getComments()
         );
 
-        System.out.println("authenticationPrincipal username : " + user.getUsername());
-        String auth = (user.getUsername().equals(getPost.getUser().getUsername())) ? "own" : "";
+        String auth = "";
+        if(user != null){
+            System.out.println("authenticationPrincipal username : " + user.getUsername());
+            auth = (user.getUsername().equals(getPost.getUser().getUsername())) ? "own" : "";
+        }
         System.out.println("auth = " + auth);
         model.addAttribute("auth", auth);
         model.addAttribute("post", post);
