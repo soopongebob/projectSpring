@@ -54,6 +54,18 @@ public class User implements UserDetails {
         this.role = role;
     }
 
+    //회원정보 수정
+    public void changeInfo(String username, String email){
+        this.username = username;
+        this.email = email;
+    }
+
+    public String getUserName(){
+        return this.username;
+    }
+
+    //TODO:비밀번호 수정
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> roles = new HashSet<>();

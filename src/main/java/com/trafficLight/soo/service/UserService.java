@@ -1,5 +1,6 @@
 package com.trafficLight.soo.service;
 
+import com.trafficLight.soo.controller.MyPageForm;
 import com.trafficLight.soo.controller.SignInForm;
 import com.trafficLight.soo.controller.SignUpForm;
 import com.trafficLight.soo.entity.Role;
@@ -17,6 +18,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -146,5 +148,14 @@ public class UserService implements UserDetailsService {
     public Optional<User> getUser(String userId){
         Optional<User> user = userRepository.findByUserId(userId);
         return user;
+    }
+
+    @Transactional
+    public void changeInfo(MyPageForm myPageForm){
+        Optional<User> findUser = userRepository.findByUserId(myPageForm.getUserId());
+        findUser.get().changeInfo(
+                myPageForm.getUsername(),
+                myPageForm.getEmail()
+        );
     }
 }
