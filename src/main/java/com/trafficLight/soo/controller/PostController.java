@@ -1,7 +1,9 @@
 package com.trafficLight.soo.controller;
 
+import com.trafficLight.soo.entity.Comment;
 import com.trafficLight.soo.entity.Post;
 import com.trafficLight.soo.entity.User;
+import com.trafficLight.soo.service.CommentService;
 import com.trafficLight.soo.service.PostService;
 import com.trafficLight.soo.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -10,10 +12,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -27,6 +29,7 @@ public class PostController {
 
     private final PostService postService;
     private final UserService userService;
+    private final CommentService commentService;
 
     /**
      * 게시판 리스트
@@ -84,10 +87,9 @@ public class PostController {
      * @param user
      * @return "post/view"
      */
-    @GetMapping("/post/view")
-    public String postView(@RequestParam("postIdx") Long postIdx, Model model, @AuthenticationPrincipal User user){
+    @GetMapping("/post/view/{postIdx}")
+    public String postView(@PathVariable("postIdx") Long postIdx, Model model, @AuthenticationPrincipal User user){
         System.out.println("postIdx = " + postIdx);
-
 
         Post getPost = postService.findByPostIdx(postIdx);
         String ldt = getPost.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-mm-dd HH:mm"));
@@ -106,7 +108,12 @@ public class PostController {
         System.out.println("auth = " + auth);
         model.addAttribute("auth", auth);
         model.addAttribute("post", post);
-        System.out.println("postIdx : " + post.getPostIdx());
+        model.addAttribute("comments", post.getComments());
+
+        CommentForm commentForm = new CommentForm();
+        commentForm.setPostIdx(postIdx);
+        model.addAttribute("commentForm", commentForm);
+
         return "post/view";
     }
 
@@ -116,8 +123,8 @@ public class PostController {
      * @param model
      * @return "post/edit"
      */
-    @GetMapping("/post/edit")
-    public String postEdit(@RequestParam("postIdx") Long postIdx, Model model){
+    @GetMapping("/post/edit/{postIdx}")
+    public String postEdit(@PathVariable("postIdx") Long postIdx, Model model){
         System.out.println("---수정---");
         Post post = postService.findByPostIdx(postIdx);
         PostEditForm postEditForm = new PostEditForm(
@@ -128,6 +135,7 @@ public class PostController {
         System.out.println("content : " + postEditForm.getContent());
         System.out.println("subject : " + postEditForm.getSubject());
         model.addAttribute("postEditForm", postEditForm);
+
         return "post/edit";
     }
 
@@ -137,8 +145,8 @@ public class PostController {
      * @param postEditForm
      * @return "redirect:/post/view?postIdx="+postIdx
      */
-    @PostMapping("/post/edit")
-    public String postEdit(@RequestParam("postIdx") Long postIdx, @Valid PostEditForm postEditForm){
+    @PostMapping("/post/edit/{postIdx}")
+    public String postEdit(@PathVariable("postIdx") Long postIdx, @Valid PostEditForm postEditForm){
         System.out.println("----------수정 저장--------");
         System.out.println("postIdx : " + postIdx);
         System.out.println("postEditForm : " + postEditForm.getSubject());
@@ -150,13 +158,33 @@ public class PostController {
         );
         postService.save(post);
 
-        return "redirect:/post/view?postIdx="+postIdx;
+        return "redirect:/post/view/"+postIdx;
     }
 
-    @GetMapping("/post/delete")
-    public String postDelete(@RequestParam("postIdx") Long postIdx){
+    @GetMapping("/post/delete/{postIdx}")
+    public String postDelete(@PathVariable("postIdx") Long postIdx){
         System.out.println("-----삭제-----");
         postService.delete(postIdx);
         return "redirect:/post/list";
+    }
+
+    /**
+     * 댓글 저장
+     */
+    @PostMapping("/post/comment/{postIdx}")
+    public String commentSave(@PathVariable("postIdx") Long postIdx,
+                              @Valid CommentForm commentForm,
+                              @AuthenticationPrincipal User authUser){
+        System.out.println("postIdx : " + postIdx);
+        Post post = postService.findByPostIdx(postIdx);
+        Optional<User> user = userService.getUser(authUser.getUserId());
+        System.out.println("post객체 : " + post.getPostIdx());
+        System.out.println("user객체 : " + user.get().getUserId());
+        Comment comment = new Comment(commentForm.getContent());
+        comment.setPost(post);
+        comment.setUser(user.get());
+        commentService.save(comment);
+
+        return "redirect:/post/view/"+postIdx;
     }
 }

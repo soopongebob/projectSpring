@@ -26,7 +26,8 @@
                 <tr th:each="post : ${posts}">
                     <td th:text="${post.postIdx}"></td>
                     <td>
-                        <a th:href="@{/post/view(postIdx=${post.postIdx})}">
+<!--                        <a th:href="@{/post/view(postIdx=${post.postIdx})}">-->
+                        <a th:href="@{/post/view/{postIdx}(postIdx=${post.postIdx})}">
                             <p th:text="${post.subject}"></p>
                         </a>
                     </td>

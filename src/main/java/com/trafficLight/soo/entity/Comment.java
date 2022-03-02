@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 public class Comment {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "comment_idx")
     private Long index;
 
@@ -43,5 +43,9 @@ public class Comment {
     public void setPost(Post post){
         this.post = post;
         post.getComments().add(this);
+    }
+
+    public Comment(String content) {
+        this.content = content;
     }
 }
