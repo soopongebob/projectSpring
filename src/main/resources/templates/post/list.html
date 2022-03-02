@@ -28,7 +28,7 @@
                     <td>
 <!--                        <a th:href="@{/post/view(postIdx=${post.postIdx})}">-->
                         <a th:href="@{/post/view/{postIdx}(postIdx=${post.postIdx})}">
-                            <p th:text="${post.subject}"></p>
+                            <span th:text="${post.subject}"></span>
                         </a>
                     </td>
                     <td th:text="${post.viewCount}"></td>

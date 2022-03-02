@@ -36,6 +36,8 @@ public class UserController {
                 //security getUsername override 때문에, username은 getUserName() 으로 가져옴
                 .username(user.getUserName())
                 .email(user.getEmail())
+                .posts(user.getPosts())
+                .comments(user.getComments())
                 .build();
         model.addAttribute("myPageForm", myPageForm);
         return "users/myPage";
