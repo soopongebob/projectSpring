@@ -1,15 +1,12 @@
 package com.trafficLight.soo.config;
 
-import com.trafficLight.soo.controller.SignInForm;
 import com.trafficLight.soo.entity.User;
 import com.trafficLight.soo.service.UserService;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,17 +17,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity      //웹 보안 활성화
@@ -39,16 +27,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserService userService;
-    /**
-     * 임시 인증정보
-     * @param auth
-     * @throws Exception
-     */
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        System.out.println("auth.authenticationProvider 실행");
-        auth.authenticationProvider(authenticationProvider());
-    }
+//    /**
+//     * 임시 인증정보
+//     * @param auth
+//     * @throws Exception
+//     */
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        System.out.println("auth.authenticationProvider 실행");
+//        auth.authenticationProvider(authenticationProvider());
+//    }
 
     @Bean
     public AuthenticationProvider authenticationProvider(){
@@ -80,6 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             }
         };
     }
+
     /**
      * 비밀번호 암호화 메서드
      * Factories로 여러 개의 인코더를 선언하여, 상황에 맞게 선택해서 사용
@@ -105,6 +94,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         PathRequest.toStaticResources().atCommonLocations()
                 );
     }
+
     /**
      * security 설정
      * @param http 요청에 대한 보안
@@ -112,7 +102,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception{
-        http.csrf().disable()       //csrf 인증 disable
+        http
+            .csrf()
+                .disable()        //disable 해제
+//                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//            .and()
             .authorizeRequests()    //요청 권한 검사 시작
                 //페이지 권한
                 .antMatchers("/users/myPage").hasRole("USER")
