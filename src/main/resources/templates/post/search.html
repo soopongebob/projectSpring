@@ -7,12 +7,11 @@
 </head>
 <body>
 
-<div th:if="${!search.isEmpty()}">
-
-    <div class="p-5 mb-4 bg-light rounded-3">
-        <div class="container-fluid py-5">
-            <h1 class="display-5 fw-bold">Custom page</h1>
-            <p class="col-md-8 fs-4">게시판</p>
+<div class="p-5 mb-4 bg-light rounded-3">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">Custom page</h1>
+        <p class="col-md-8 fs-4">게시판</p>
+        <div th:if="${!posts.isEmpty()}">
             <table class="table">
                 <thead>
                 <tr>
@@ -41,57 +40,61 @@
                 </tbody>
             </table>
             <div class="text-end">
-                <button class="btn btn-primary justify-content-end" type="button" onclick="location.href='/post/write'">write</button>
+                <button class="btn btn-primary justify-content-end" type="button" onclick="location.href='/post/write'">
+                    write
+                </button>
             </div>
         </div>
-        <nav aria-label="Page navigation"
-             th:with="
+        <div th:if="${posts.isEmpty()}">
+            <h5>검색결과가 없습니다.</h5>
+        </div>
+    </div>
+    <nav aria-label="Page navigation"
+         th:with="
                 pageNumber = ${posts.pageable.pageNumber},
                 pageSize = ${posts.pageable.pageSize},
                 totalPages = ${posts.totalPages},
                 startPage = ${T(Math).floor(pageNumber / pageSize) * pageSize + 1},
                 tempEndPage = ${startPage + pageSize - 1},
                 endPage = (${tempEndPage > totalPages ? totalPages : tempEndPage})">
-            <ul class="pagination justify-content-center">
-                <li th:classappend="${pageNumber + 1 <= pageSize + 1} ? 'disabled'" class="page-item">
-                    <a class="page-link" th:href="@{/post/list(page=1)}">
-                        <span>&laquo;</span>
-                    </a>
-                </li>
+        <ul class="pagination justify-content-center">
+            <li th:classappend="${pageNumber + 1 <= pageSize + 1} ? 'disabled'" class="page-item">
+                <a class="page-link" th:href="@{/post/list(page=1)}">
+                    <span>&laquo;</span>
+                </a>
+            </li>
 
-                <li th:classappend="${posts.first} ? 'disabled'" class="page-item">
-                    <a class="page-link"
-                       th:href="${posts.first} ? '#' : @{/post/list(page=${#numbers.formatDecimal(startPage - pageSize, 0, -1)})}"
-                       aria-label="Previous">
-                        <span aria-hidden="true">&lt;</span>
-                    </a>
-                </li>
+            <li th:classappend="${posts.first} ? 'disabled'" class="page-item">
+                <a class="page-link"
+                   th:href="${posts.first} ? '#' : @{/post/list(page=${#numbers.formatDecimal(startPage - pageSize, 0, -1)})}"
+                   aria-label="Previous">
+                    <span aria-hidden="true">&lt;</span>
+                </a>
+            </li>
 
-                <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
-                    th:classappend="${page == pageNumber + 1} ? 'active'" class="page-item">
-                    <a th:text="${page}" class="page-link" th:href="@{/post/list(page=${page})}"></a>
-                </li>
+            <li th:each="page: ${#numbers.sequence(startPage, (endPage == 0 ? startPage : endPage))}"
+                th:classappend="${page == pageNumber + 1} ? 'active'" class="page-item">
+                <a th:text="${page}" class="page-link" th:href="@{/post/list(page=${page})}"></a>
+            </li>
 
-                <li th:classappend="${posts.last} ? 'disabled'" class="page-item">
-                    <a class="page-link"
-                       th:href="${posts.last} ? '#' : @{/post/list(page=${#numbers.formatDecimal(startPage + pageSize, 0, -1)})}"
-                       aria-label="Next">
-                        <span aria-hidden="true">&gt;</span>
-                        <span class="sr-only"></span>
-                    </a>
-                </li>
+            <li th:classappend="${posts.last} ? 'disabled'" class="page-item">
+                <a class="page-link"
+                   th:href="${posts.last} ? '#' : @{/post/list(page=${#numbers.formatDecimal(startPage + pageSize, 0, -1)})}"
+                   aria-label="Next">
+                    <span aria-hidden="true">&gt;</span>
+                    <span class="sr-only"></span>
+                </a>
+            </li>
 
-                <li th:classappend=" ${T(Math).floor(totalPages/10)*10 <= startPage} ? 'disabled'"
-                    class="page-item">
-                    <a class="page-link" th:href="@{/post/list(page=${totalPages})}">
-                        <span>&raquo;</span>
-                        <span class="sr-only"></span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-
-    </div>
+            <li th:classappend=" ${T(Math).floor(totalPages/10)*10 <= startPage} ? 'disabled'"
+                class="page-item">
+                <a class="page-link" th:href="@{/post/list(page=${totalPages})}">
+                    <span>&raquo;</span>
+                    <span class="sr-only"></span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>
 
 <div th:replace="fragments/footer :: footer"/>
