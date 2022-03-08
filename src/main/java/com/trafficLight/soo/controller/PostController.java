@@ -190,4 +190,19 @@ public class PostController {
 
         return "redirect:/post/view/"+postIdx;
     }
+
+    @GetMapping("/post/search")
+    public String search(@RequestParam String search, Model model,
+                         @PageableDefault(page = 0, size = 5, sort="postIdx", direction = Sort.Direction.DESC) Pageable pageable){
+        System.out.println("search : " + search);
+        model.addAttribute("search", search);
+        SearchCondition searchCondition = new SearchCondition();
+        //임시변수
+        searchCondition.setContent(search);
+
+        Page<PostListForm> result = postService.search(searchCondition, pageable);
+        model.addAttribute("posts", result);
+
+        return "post/search";
+    }
 }

@@ -3,6 +3,7 @@ package com.trafficLight.soo.service;
 import com.trafficLight.soo.controller.PostEditForm;
 import com.trafficLight.soo.controller.PostListForm;
 import com.trafficLight.soo.controller.PostViewForm;
+import com.trafficLight.soo.controller.SearchCondition;
 import com.trafficLight.soo.entity.Post;
 import com.trafficLight.soo.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -43,5 +44,10 @@ public class PostService {
 
     public void delete(Long postIdx){
         postRepository.deleteById(postIdx);
+    }
+
+    public Page<PostListForm> search(SearchCondition searchCondition, Pageable pageable){
+        Page<PostListForm> postListForms = postRepository.searchPost(searchCondition, pageable);
+        return postListForms;
     }
 }
