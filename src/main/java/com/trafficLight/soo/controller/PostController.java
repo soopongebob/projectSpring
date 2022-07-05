@@ -92,7 +92,7 @@ public class PostController {
         System.out.println("postIdx = " + postIdx);
 
         Post getPost = postService.findByPostIdx(postIdx);
-        String ldt = getPost.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-mm-dd HH:mm"));
+        String ldt = getPost.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         PostViewForm post = new PostViewForm(
                 getPost.getPostIdx(),
                 getPost.getSubject(),
@@ -199,6 +199,7 @@ public class PostController {
         SearchCondition searchCondition = new SearchCondition();
         //임시변수
         searchCondition.setContent(search);
+        searchCondition.setSubject(search);
 
         Page<PostListForm> result = postService.search(searchCondition, pageable);
         model.addAttribute("posts", result);
